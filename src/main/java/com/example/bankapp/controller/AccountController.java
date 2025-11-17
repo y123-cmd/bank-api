@@ -71,5 +71,6 @@ public class AccountController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+
     }
 }
