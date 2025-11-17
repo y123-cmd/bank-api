@@ -34,11 +34,20 @@ public class AccountController {
         return ResponseEntity.ok(acc);
     }
 
+
+
     // Get all accounts
     @GetMapping
     public Collection<BankAccount> getAll() {
         return service.getAllAccounts();
     }
+    @GetMapping("/by-name/{name}")
+    public ResponseEntity<BankAccount> getByName(@PathVariable String name) {
+        BankAccount acc = service.getAccountByName(name);
+        if (acc == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(acc);
+    }
+
 
     // Deposit
     @PostMapping("/{id}/deposit")

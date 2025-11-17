@@ -28,5 +28,12 @@ public class AccountRepository {
     public boolean existsById(Long id) {
         return accounts.containsKey(id);
     }
-}
 
+    public BankAccount findByHolderName(String holderName) {
+        return accounts.values()
+                .stream()
+                .filter(acc -> acc.getHolderName().equals(holderName))
+                .findFirst()
+                .orElse(null);
+    }
+}

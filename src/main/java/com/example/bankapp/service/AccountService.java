@@ -1,3 +1,4 @@
+
 package com.example.bankapp.service;
 
 import com.example.bankapp.model.BankAccount;
@@ -15,6 +16,10 @@ public class AccountService {
     public AccountService(AccountRepository repo) {
         this.repo = repo;
     }
+    public BankAccount getAccountByName(String name) {
+        return repo.findByHolderName(name);
+    }
+
     public BankAccount createAccount(BankAccount account) {
         BankAccount acc = new BankAccount(
                 account.getId(),
