@@ -15,14 +15,15 @@ public class AccountService {
     public AccountService(AccountRepository repo) {
         this.repo = repo;
     }
-
-    public BankAccount createAccount(Long id, String holderName) {
-        if (repo.existsById(id)) {
-            throw new IllegalArgumentException("Account with id " + id + " already exists");
-        }
-        BankAccount acc = new BankAccount(id, holderName, 0.0);
+    public BankAccount createAccount(BankAccount account) {
+        BankAccount acc = new BankAccount(
+                account.getId(),
+                account.getHolderName(),
+                account.getBalance()
+        );
         return repo.save(acc);
     }
+
 
     public BankAccount getAccount(Long id) {
         return repo.findById(id);

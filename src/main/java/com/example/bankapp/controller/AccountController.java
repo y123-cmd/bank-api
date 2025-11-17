@@ -19,15 +19,12 @@ public class AccountController {
 
     // Create account
     @PostMapping
-    public ResponseEntity<BankAccount> create(@RequestParam Long id,
-                                              @RequestParam String name) {
-        try {
-            BankAccount created = service.createAccount(id, name);
-            return ResponseEntity.ok(created);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<BankAccount> create(@RequestBody BankAccount account) {
+        BankAccount created = service.createAccount(account);
+        return ResponseEntity.ok(created);
     }
+
+
 
     // Get single account
     @GetMapping("/{id}")
