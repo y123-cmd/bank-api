@@ -2,6 +2,7 @@ package com.example.bankapp.controller;
 
 import com.example.bankapp.model.BankAccount;
 import com.example.bankapp.service.AccountService;
+import com.example.bankapp.service.Impl.AccountServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ public class AccountController {
 
     private final AccountService service;
 
-    public AccountController(AccountService service) {
+    public AccountController(AccountServiceImpl service) {
         this.service = service;
     }
 
