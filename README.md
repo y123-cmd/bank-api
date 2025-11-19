@@ -1,6 +1,6 @@
 # 🏦 Bank Management API
 
-[![Java](https://img.shields.io/badge/Java-17+-blue)](https://www.oracle.com/java/)
+[![Java](https://img.shields.io/badge/Java-21+-blue)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-brightgreen)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
@@ -19,7 +19,7 @@ This project is designed to demonstrate **Spring Boot basics**, **dependency inj
 ---
 
 ## Technologies & Tools
-- **Java 17+**  
+- **Java 21+**  
 - **Spring Boot**  
 - **Maven** for build management  
 - **Postman** or any API client for testing endpoints  
@@ -49,7 +49,7 @@ Copy code
 git clone git@github.com:y123-cmd/bank-api.git
 Open the project in IntelliJ IDEA or your preferred IDE.
 
-Make sure you have Java 17+ installed and selected as your project SDK.
+Make sure you have Java 21+ installed and selected as your project SDK.
 
 Run the main class:
 
@@ -58,7 +58,4 @@ Copy code
 BankappApplication.java
 The API will start on:
 
-go
-Copy code
-http://localhost:8080
-``
+
