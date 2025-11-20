@@ -1,4 +1,4 @@
-package com.example.bankapp.repository;
+package com.example.bankapp.model.repository;
 
 import com.example.bankapp.model.BankAccount;
 import org.springframework.stereotype.Repository;
