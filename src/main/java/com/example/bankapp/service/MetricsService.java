@@ -15,4 +15,10 @@ public class MetricsService {
     public void incrementAccountCreated() {
         registry.counter("bankapp.account.created").increment();
     }
+    public void incrementDeposit(){
+        registry.counter("bankapp.account.deposit").increment();
+    }
+    public void incrementWithdrawal(){
+        registry.counter("bankapp.account.withdrawal").increment();
+    }
 }

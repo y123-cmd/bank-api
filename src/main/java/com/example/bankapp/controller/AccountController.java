@@ -4,7 +4,7 @@ import com.example.bankapp.model.BankAccount;
 import com.example.bankapp.service.AccountService;
 import com.example.bankapp.service.Impl.AccountServiceImpl;
 import com.example.bankapp.service.AuditService;
-import com.example.bankapp.service.MetricsService;
+import com.example.bankapp.service.MetricsService; // <-- Import MetricsService
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ public class AccountController {
 
     private final AccountService service;
     private final AuditService auditService;
-    private final MetricsService metricsService;
+    private final MetricsService metricsService; // <-- Inject MetricsService
 
     // Inject AccountServiceImpl, AuditService, and MetricsService
     public AccountController(AccountServiceImpl service, AuditService auditService, MetricsService metricsService) {
@@ -29,14 +29,39 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<BankAccount> create(@RequestBody BankAccount account) {
         BankAccount created = service.createAccount(account);
-
-        // Log for auditing
         auditService.log("Created account with ID: " + created.getId());
-
-        // Increment the metric counter
-        metricsService.incrementAccountCreated();
-
+        metricsService.incrementAccountCreated(); // Increment account creation metric
         return ResponseEntity.ok(created);
+    }
+
+    // Deposit
+    @PostMapping("/{id}/deposit")
+    public ResponseEntity<BankAccount> deposit(@PathVariable Long id,
+                                               @RequestParam double amount) {
+        try {
+            BankAccount acc = service.deposit(id, amount);
+            auditService.log("Deposited " + amount + " to account ID: " + id);
+            metricsService.incrementDeposit(); // Increment deposit metric
+            return ResponseEntity.ok(acc);
+        } catch (IllegalArgumentException e) {
+            auditService.log("Failed deposit attempt to account ID: " + id);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // Withdraw
+    @PostMapping("/{id}/withdraw")
+    public ResponseEntity<BankAccount> withdraw(@PathVariable Long id,
+                                                @RequestParam double amount) {
+        try {
+            BankAccount acc = service.withdraw(id, amount);
+            auditService.log("Withdrew " + amount + " from account ID: " + id);
+            metricsService.incrementWithdrawal(); // Increment withdrawal metric
+            return ResponseEntity.ok(acc);
+        } catch (IllegalArgumentException e) {
+            auditService.log("Failed withdrawal attempt from account ID: " + id);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // Get single account
@@ -63,33 +88,5 @@ public class AccountController {
         if (acc == null) return ResponseEntity.notFound().build();
         auditService.log("Fetched account by name: " + name);
         return ResponseEntity.ok(acc);
-    }
-
-    // Deposit
-    @PostMapping("/{id}/deposit")
-    public ResponseEntity<BankAccount> deposit(@PathVariable Long id,
-                                               @RequestParam double amount) {
-        try {
-            BankAccount acc = service.deposit(id, amount);
-            auditService.log("Deposited " + amount + " to account ID: " + id);
-            return ResponseEntity.ok(acc);
-        } catch (IllegalArgumentException e) {
-            auditService.log("Failed deposit attempt to account ID: " + id);
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    // Withdraw
-    @PostMapping("/{id}/withdraw")
-    public ResponseEntity<BankAccount> withdraw(@PathVariable Long id,
-                                                @RequestParam double amount) {
-        try {
-            BankAccount acc = service.withdraw(id, amount);
-            auditService.log("Withdrew " + amount + " from account ID: " + id);
-            return ResponseEntity.ok(acc);
-        } catch (IllegalArgumentException e) {
-            auditService.log("Failed withdrawal attempt from account ID: " + id);
-            return ResponseEntity.badRequest().build();
-        }
     }
 }
