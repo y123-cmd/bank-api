@@ -4,6 +4,7 @@ import com.example.bankapp.model.BankAccount;
 import com.example.bankapp.service.AccountService;
 import com.example.bankapp.service.Impl.AccountServiceImpl;
 import com.example.bankapp.service.AuditService;
+import com.example.bankapp.service.MetricsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +16,26 @@ public class AccountController {
 
     private final AccountService service;
     private final AuditService auditService;
+    private final MetricsService metricsService;
 
-    // Inject both AccountServiceImpl and AuditService
-    public AccountController(AccountServiceImpl service, AuditService auditService) {
+    // Inject AccountServiceImpl, AuditService, and MetricsService
+    public AccountController(AccountServiceImpl service, AuditService auditService, MetricsService metricsService) {
         this.service = service;
         this.auditService = auditService;
+        this.metricsService = metricsService;
     }
 
     // Create account
     @PostMapping
     public ResponseEntity<BankAccount> create(@RequestBody BankAccount account) {
         BankAccount created = service.createAccount(account);
+
+        // Log for auditing
         auditService.log("Created account with ID: " + created.getId());
+
+        // Increment the metric counter
+        metricsService.incrementAccountCreated();
+
         return ResponseEntity.ok(created);
     }
 
