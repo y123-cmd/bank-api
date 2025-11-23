@@ -1,5 +1,3 @@
-
-
 package com.example.bankapp.service.Impl;
 
 import com.example.bankapp.model.BankAccount;

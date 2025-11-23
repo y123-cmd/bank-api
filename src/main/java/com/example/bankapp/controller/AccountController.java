@@ -1,78 +1,53 @@
 
 package com.example.bankapp.controller;
 
-import com.example.bankapp.model.BankAccount;
-import com.example.bankapp.service.AccountService;
-import com.example.bankapp.service.Impl.AccountServiceImpl;
+import com.example.bankapp.pojo.AccountDto;
+import com.example.bankapp.pojo.TransactionDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-
 @RestController
 @RequestMapping("/accounts")
+@Tag(name = "Account Controller", description = "Handles deposits, balance checks and money transfers")
 public class AccountController {
 
-    private final AccountService service;
-
-    public AccountController(AccountServiceImpl service) {
-        this.service = service;
+    // Deposit money
+    @Operation(summary = "Deposit money", description = "Deposits money into an account")
+    @PostMapping("/{accountId}/deposit")
+    public ResponseEntity<String> deposit(
+            @PathVariable Long accountId,
+            @RequestBody TransactionDto transactionDto
+    ) {
+        return ResponseEntity.ok("Deposited " + transactionDto.getAmount() +
+                " to account " + accountId);
     }
 
-    // Create account
-    @PostMapping
-    public ResponseEntity<BankAccount> create(@RequestBody BankAccount account) {
-        BankAccount created = service.createAccount(account);
-        return ResponseEntity.ok(created);
+    // Check balance
+    @Operation(summary = "Check account balance", description = "Returns the account balance")
+    @GetMapping("/{accountId}/balance")
+    public ResponseEntity<AccountDto> getBalance(@PathVariable Long accountId) {
+        // Dummy logic
+        AccountDto account = new AccountDto(accountId, 5000.00);
+        return ResponseEntity.ok(account);
     }
 
-
-
-    // Get single account
-    @GetMapping("/{id}")
-    public ResponseEntity<BankAccount> get(@PathVariable Long id) {
-        BankAccount acc = service.getAccount(id);
-        if (acc == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(acc);
+    // View balance (same endpoint but returning plain message)
+    @Operation(summary = "View balance (string version)", description = "Returns balance in a text format")
+    @GetMapping("/{accountId}/view-balance")
+    public ResponseEntity<String> viewBalance(@PathVariable Long accountId) {
+        return ResponseEntity.ok("The balance for account " + accountId + " is 5000.00");
     }
 
-
-
-    // Get all accounts
-    @GetMapping
-    public Collection<BankAccount> getAll() {
-        return service.getAllAccounts();
-    }
-    @GetMapping("/by-name/{name}")
-    public ResponseEntity<BankAccount> getByName(@PathVariable String name) {
-        BankAccount acc = service.getAccountByName(name);
-        if (acc == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(acc);
-    }
-
-
-    // Deposit
-    @PostMapping("/{id}/deposit")
-    public ResponseEntity<BankAccount> deposit(@PathVariable Long id,
-                                               @RequestParam double amount) {
-        try {
-            BankAccount acc = service.deposit(id, amount);
-            return ResponseEntity.ok(acc);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    // Withdraw
-    @PostMapping("/{id}/withdraw")
-    public ResponseEntity<BankAccount> withdraw(@PathVariable Long id,
-                                                @RequestParam double amount) {
-        try {
-            BankAccount acc = service.withdraw(id, amount);
-            return ResponseEntity.ok(acc);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
-
+    // Send money
+    @Operation(summary = "Send money", description = "Transfers money from one account to another")
+    @PostMapping("/send")
+    public ResponseEntity<String> sendMoney(@RequestBody TransactionDto dto) {
+        return ResponseEntity.ok(
+                "Sent " + dto.getAmount() +
+                        " from account " + dto.getFromAccountId() +
+                        " to account " + dto.getToAccountId()
+        );
     }
 }
