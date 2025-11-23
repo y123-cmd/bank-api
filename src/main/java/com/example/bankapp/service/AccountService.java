@@ -1,20 +1,15 @@
 package com.example.bankapp.service;
 
-import com.example.bankapp.model.BankAccount;
-
-import java.util.Collection;
+import com.example.bankapp.pojo.AccountDto;
+import com.example.bankapp.pojo.TransactionDto;
 
 public interface AccountService {
 
-    BankAccount createAccount(BankAccount account);
+    String deposit(Long accountId, Double amount);
 
-    BankAccount getAccount(Long id);
+    AccountDto getBalance(Long accountId);
 
-    Collection<BankAccount> getAllAccounts();
+    String viewBalance(Long accountId);
 
-    BankAccount deposit(Long id, double amount);
-
-    BankAccount withdraw(Long id, double amount);
-
-    BankAccount getAccountByName(String name);
+    String sendMoney(TransactionDto dto);
 }
