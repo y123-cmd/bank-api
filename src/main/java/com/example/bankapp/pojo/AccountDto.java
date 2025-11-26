@@ -11,10 +11,12 @@ public class AccountDto {
         this.balance = balance;
     }
 
+    // Correct getter
     public Long getAccountId() {
         return accountId;
     }
 
+    // Correct setter
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }

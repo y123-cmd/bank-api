@@ -1,3 +1,4 @@
+
 package com.example.bankapp.service;
 
 import com.example.bankapp.pojo.UserDto;
@@ -11,4 +12,3 @@ public interface UserService {
     void deleteUser(Long id);
     List<UserDto> searchUsersByUsername(String username);
 }
-
