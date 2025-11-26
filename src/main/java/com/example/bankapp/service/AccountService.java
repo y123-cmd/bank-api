@@ -1,58 +1,18 @@
 
 package com.example.bankapp.service;
 
-import com.example.bankapp.model.BankAccount;
-import com.example.bankapp.repository.AccountRepository;
-import org.springframework.stereotype.Service;
+import com.example.bankapp.pojo.AccountDto;
+import com.example.bankapp.pojo.TransactionDto;
 
-import java.util.Collection;
+public interface AccountService {
 
-@Service
-public class AccountService {
+    String deposit(Long accountId, Double amount);
 
-    private final AccountRepository repo;
+    AccountDto getBalance(Long accountId);
 
-    // Constructor injection: Spring will inject AccountRepository automatically
-    public AccountService(AccountRepository repo) {
-        this.repo = repo;
-    }
-    public BankAccount getAccountByName(String name) {
-        return repo.findByHolderName(name);
-    }
+    AccountDto createAccount(AccountDto dto);
 
-    public BankAccount createAccount(BankAccount account) {
-        BankAccount acc = new BankAccount(
-                account.getId(),
-                account.getHolderName(),
-                account.getBalance()
-        );
-        return repo.save(acc);
-    }
+    String viewBalance(Long accountId);
 
-
-    public BankAccount getAccount(Long id) {
-        return repo.findById(id);
-    }
-
-    public Collection<BankAccount> getAllAccounts() {
-        return repo.findAll();
-    }
-
-    public BankAccount deposit(Long id, double amount) {
-        if (amount <= 0) throw new IllegalArgumentException("Amount must be > 0");
-        BankAccount acc = repo.findById(id);
-        if (acc == null) throw new IllegalArgumentException("Account not found");
-        acc.setBalance(acc.getBalance() + amount);
-        return repo.save(acc);
-    }
-
-    public BankAccount withdraw(Long id, double amount) {
-        if (amount <= 0) throw new IllegalArgumentException("Amount must be > 0");
-        BankAccount acc = repo.findById(id);
-        if (acc == null) throw new IllegalArgumentException("Account not found");
-        if (acc.getBalance() < amount) throw new IllegalArgumentException("Insufficient balance");
-        acc.setBalance(acc.getBalance() - amount);
-        return repo.save(acc);
-    }
-
+    String sendMoney(TransactionDto dto);
 }
